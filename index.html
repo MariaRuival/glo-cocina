@@ -35,6 +35,11 @@
   <!-- HERO BANNER -->
   <section class="hero">
     <p class="hero-copy">Seleccioná tus viandas y hacé tu pedido directo por WhatsApp.</p>
+    <!-- Loading indicator -->
+    <div class="stock-loading" id="stockLoading" hidden>
+      <span class="spinner"></span>
+      <span>Cargando disponibilidad...</span>
+    </div>
   </section>
 
   <!-- CATALOG -->
@@ -45,9 +50,10 @@
       <h2 class="category-title">Proteínas</h2>
       <div class="items-grid">
 
-        <div class="item-card" data-name="Solomillo de cerdo con mostaza y miel" data-price="13300">
+        <div class="item-card" data-key="solomillo" data-name="Solomillo de cerdo con mostaza y miel" data-price="13300">
           <div class="item-info">
             <p class="item-name">Solomillo de cerdo con mostaza y miel</p>
+            <span class="stock-badge" hidden></span>
           </div>
           <div class="item-right">
             <span class="item-price">$13.300</span>
@@ -59,10 +65,11 @@
           </div>
         </div>
 
-        <div class="item-card" data-name="Pechuga mediterránea" data-price="12500">
+        <div class="item-card" data-key="pechuga" data-name="Pechuga mediterránea" data-price="12500">
           <div class="item-info">
             <p class="item-name">Pechuga mediterránea</p>
             <p class="item-desc">marinado en yogurt natural y especias</p>
+            <span class="stock-badge" hidden></span>
           </div>
           <div class="item-right">
             <span class="item-price">$12.500</span>
@@ -74,9 +81,10 @@
           </div>
         </div>
 
-        <div class="item-card" data-name="Bondiola braseada" data-price="13500">
+        <div class="item-card" data-key="bondiola" data-name="Bondiola braseada" data-price="13500">
           <div class="item-info">
             <p class="item-name">Bondiola braseada</p>
+            <span class="stock-badge" hidden></span>
           </div>
           <div class="item-right">
             <span class="item-price">$13.500</span>
@@ -88,9 +96,10 @@
           </div>
         </div>
 
-        <div class="item-card" data-name="Wok de verduras con langostinos" data-price="14400">
+        <div class="item-card" data-key="wok" data-name="Wok de verduras con langostinos" data-price="14400">
           <div class="item-info">
             <p class="item-name">Wok de verduras con langostinos</p>
+            <span class="stock-badge" hidden></span>
           </div>
           <div class="item-right">
             <span class="item-price">$14.400</span>
@@ -110,9 +119,10 @@
       <h2 class="category-title">Guarniciones</h2>
       <div class="items-grid">
 
-        <div class="item-card" data-name="Zapallos cabutia al horno" data-price="4400">
+        <div class="item-card" data-key="zapallos" data-name="Zapallos cabutia al horno" data-price="4400">
           <div class="item-info">
             <p class="item-name">Zapallos cabutia al horno</p>
+            <span class="stock-badge" hidden></span>
           </div>
           <div class="item-right">
             <span class="item-price">$4.400</span>
@@ -124,10 +134,11 @@
           </div>
         </div>
 
-        <div class="item-card" data-name="Salteado de vegetales" data-price="4600">
+        <div class="item-card" data-key="salteado" data-name="Salteado de vegetales" data-price="4600">
           <div class="item-info">
             <p class="item-name">Salteado de vegetales</p>
             <p class="item-desc">zucchini, zanahoria, cebolla y cabutia</p>
+            <span class="stock-badge" hidden></span>
           </div>
           <div class="item-right">
             <span class="item-price">$4.600</span>
@@ -139,9 +150,10 @@
           </div>
         </div>
 
-        <div class="item-card" data-name="Puré clásico de papa" data-price="5500">
+        <div class="item-card" data-key="pure-papa" data-name="Puré clásico de papa" data-price="5500">
           <div class="item-info">
             <p class="item-name">Puré clásico de papa</p>
+            <span class="stock-badge" hidden></span>
           </div>
           <div class="item-right">
             <span class="item-price">$5.500</span>
@@ -153,9 +165,10 @@
           </div>
         </div>
 
-        <div class="item-card" data-name="Puré de batatas asadas" data-price="5900">
+        <div class="item-card" data-key="pure-batata" data-name="Puré de batatas asadas" data-price="5900">
           <div class="item-info">
             <p class="item-name">Puré de batatas asadas</p>
+            <span class="stock-badge" hidden></span>
           </div>
           <div class="item-right">
             <span class="item-price">$5.900</span>
@@ -167,9 +180,10 @@
           </div>
         </div>
 
-        <div class="item-card" data-name="Papines al horno" data-price="5200">
+        <div class="item-card" data-key="papines" data-name="Papines al horno" data-price="5200">
           <div class="item-info">
             <p class="item-name">Papines al horno</p>
+            <span class="stock-badge" hidden></span>
           </div>
           <div class="item-right">
             <span class="item-price">$5.200</span>
@@ -181,10 +195,11 @@
           </div>
         </div>
 
-        <div class="item-card" data-name="Arroz oriental" data-price="2500">
+        <div class="item-card" data-key="arroz" data-name="Arroz oriental" data-price="2500">
           <div class="item-info">
             <p class="item-name">Arroz oriental</p>
             <p class="item-desc">salsa de soja, cebolla y pimiento</p>
+            <span class="stock-badge" hidden></span>
           </div>
           <div class="item-right">
             <span class="item-price">$2.500</span>
@@ -234,17 +249,87 @@
   </footer>
 
   <script>
+    // ============================================================
+    //  CONFIGURACIÓN
+    //  Pegá acá la URL de tu Google Sheet publicado como CSV.
+    //  Instrucciones: ver README o pedirle ayuda a tu desarrolladora.
+    //  Dejarlo vacío ("") desactiva la integración (todo disponible).
+    // ============================================================
+    const SHEET_CSV_URL = "";
+
     const WHATSAPP_NUMBER = '5493512014792';
+    const LOW_STOCK_THRESHOLD = 3; // Mostrar "Últimas X unidades" si stock <= este número
+
+    // ============================================================
 
     const cards = document.querySelectorAll('.item-card');
     const orderBar = document.getElementById('orderBar');
     const orderCount = document.getElementById('orderCount');
     const orderTotal = document.getElementById('orderTotal');
     const whatsappBtn = document.getElementById('whatsappBtn');
+    const stockLoading = document.getElementById('stockLoading');
 
     function formatPrice(n) {
       return '$' + n.toLocaleString('es-AR');
     }
+
+    // --- Stock logic ---
+
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      const stock = {};
+      // Skip header row (first line)
+      for (let i = 1; i < lines.length; i++) {
+        const [key, value] = lines[i].split(',').map(s => s.trim().replace(/"/g, ''));
+        if (key) stock[key] = parseInt(value, 10) || 0;
+      }
+      return stock;
+    }
+
+    function applyStock(stockMap) {
+      cards.forEach(card => {
+        const key = card.dataset.key;
+        if (!(key in stockMap)) return; // Key not in sheet → leave as-is
+
+        const qty = stockMap[key];
+        const badge = card.querySelector('.stock-badge');
+        const plusBtn = card.querySelector('.qty-btn.plus');
+
+        card.dataset.stock = qty; // Store for use in qty control
+
+        if (qty === 0) {
+          card.classList.add('sin-stock');
+          plusBtn.disabled = true;
+          badge.textContent = 'Sin stock';
+          badge.className = 'stock-badge sin-stock-badge';
+          badge.hidden = false;
+        } else if (qty <= LOW_STOCK_THRESHOLD) {
+          badge.textContent = `Últimas ${qty} unidades`;
+          badge.className = 'stock-badge low-stock-badge';
+          badge.hidden = false;
+        }
+      });
+    }
+
+    async function loadStock() {
+      if (!SHEET_CSV_URL) return; // No URL configured, skip
+
+      stockLoading.hidden = false;
+      try {
+        const res = await fetch(SHEET_CSV_URL);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const text = await res.text();
+        const stockMap = parseCSV(text);
+        applyStock(stockMap);
+      } catch (err) {
+        console.warn('No se pudo cargar el stock:', err);
+        // Fail silently — all items remain available
+      } finally {
+        stockLoading.hidden = true;
+      }
+    }
+
+    // --- Order logic ---
 
     function updateOrder() {
       let total = 0;
@@ -272,7 +357,10 @@
       const qtyEl = card.querySelector('.qty-value');
 
       plusBtn.addEventListener('click', () => {
+        if (plusBtn.disabled) return;
         const current = parseInt(qtyEl.textContent, 10);
+        const maxStock = card.dataset.stock !== undefined ? parseInt(card.dataset.stock, 10) : Infinity;
+        if (current >= maxStock) return; // Respect stock limit
         qtyEl.textContent = current + 1;
         card.classList.add('selected');
         updateOrder();
@@ -308,6 +396,9 @@
       const message = encodeURIComponent(lines.join('\n'));
       window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
     });
+
+    // Start
+    loadStock();
   </script>
 
 </body>

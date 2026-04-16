@@ -229,6 +229,65 @@ body {
 }
 
 /* ===========================
+   STOCK BADGES & STATES
+   =========================== */
+
+.stock-badge {
+  display: inline-block;
+  margin-top: 5px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 4px;
+  padding: 2px 7px;
+}
+
+.sin-stock-badge {
+  background: rgba(245, 240, 232, 0.1);
+  color: var(--cream-dim);
+}
+
+.low-stock-badge {
+  background: rgba(212, 168, 67, 0.15);
+  color: var(--accent);
+}
+
+.item-card.sin-stock {
+  opacity: 0.5;
+  pointer-events: none; /* disable all interaction */
+}
+
+.item-card.sin-stock .item-price {
+  text-decoration: line-through;
+  color: var(--cream-dim);
+}
+
+/* Loading indicator */
+.stock-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--cream-dim);
+  margin-top: 10px;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(245, 240, 232, 0.2);
+  border-top-color: var(--cream-dim);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===========================
    QUANTITY CONTROL
    =========================== */
 
