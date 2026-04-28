@@ -252,6 +252,28 @@ body {
   color: var(--accent);
 }
 
+/* Badge NUEVO */
+.nuevo-badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #c0392b;
+  border: 1px solid #c0392b;
+  border-radius: 3px;
+  padding: 1px 5px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+
+/* Precio /kg */
+.item-price small {
+  font-size: 0.65rem;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
 .item-card.sin-stock {
   opacity: 0.5;
   pointer-events: none; /* disable all interaction */
