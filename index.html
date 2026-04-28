@@ -304,7 +304,7 @@
 
         <div class="item-card" data-key="milanesas" data-name="Milanesas de peceto" data-price="33000">
           <div class="item-info">
-            <p class="item-name">Milanesas de peceto <span class="nuevo-badge">NUEVO</span></p>
+            <p class="item-name">Milanesas de peceto</p>
             <span class="stock-badge" hidden></span>
           </div>
           <div class="item-right">
@@ -319,7 +319,7 @@
 
         <div class="item-card" data-key="carbonada" data-name="Carbonada" data-price="12000">
           <div class="item-info">
-            <p class="item-name">Carbonada <span class="nuevo-badge">NUEVO</span></p>
+            <p class="item-name">Carbonada</p>
             <span class="stock-badge" hidden></span>
           </div>
           <div class="item-right">
@@ -379,7 +379,6 @@
     const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTuX10wzQ0n5ob0zxNgfSoTQd7o-ZwT0pGT5ulL4q_hkEcvge1XWeodvIowdgi5QO198G_o6J4BC60Y/pub?gid=0&single=true&output=csv";
 
     const WHATSAPP_NUMBER = '5493512014792';
-    const LOW_STOCK_THRESHOLD = 3; // Mostrar "Últimas X unidades" si stock <= este número
 
     // ============================================================
 
@@ -396,38 +395,70 @@
 
     // --- Stock logic ---
 
+    // CSV esperado: columnas key, stock, fecha (DD/MM/YYYY — opcional)
     function parseCSV(text) {
       const lines = text.trim().split('\n');
-      const stock = {};
-      // Skip header row (first line)
+      const result = {};
       for (let i = 1; i < lines.length; i++) {
-        const [key, value] = lines[i].split(',').map(s => s.trim().replace(/"/g, ''));
-        if (key) stock[key] = parseInt(value, 10) || 0;
+        const parts = lines[i].split(',').map(s => s.trim().replace(/"/g, ''));
+        const key = parts[0];
+        if (!key) continue;
+        result[key] = {
+          qty:   parseInt(parts[1], 10) || 0,
+          fecha: parts[2] || ''
+        };
       }
-      return stock;
+      return result;
+    }
+
+    // Devuelve true si la fecha (DD/MM/YYYY) tiene menos de 30 días
+    function esNuevo(fechaStr) {
+      if (!fechaStr) return false;
+      let d;
+      if (fechaStr.includes('/')) {
+        const [day, month, year] = fechaStr.split('/');
+        d = new Date(+year, +month - 1, +day);
+      } else {
+        d = new Date(fechaStr);
+      }
+      if (isNaN(d)) return false;
+      return (Date.now() - d.getTime()) < 30 * 24 * 60 * 60 * 1000;
     }
 
     function applyStock(stockMap) {
       cards.forEach(card => {
         const key = card.dataset.key;
-        if (!(key in stockMap)) return; // Key not in sheet → leave as-is
+        if (!(key in stockMap)) return;
 
-        const qty = stockMap[key];
-        const badge = card.querySelector('.stock-badge');
-        const plusBtn = card.querySelector('.qty-btn.plus');
+        const { qty, fecha } = stockMap[key];
+        const stockBadge = card.querySelector('.stock-badge');
+        const plusBtn    = card.querySelector('.qty-btn.plus');
 
-        card.dataset.stock = qty; // Store for use in qty control
+        card.dataset.stock = qty;
 
         if (qty === 0) {
           card.classList.add('sin-stock');
           plusBtn.disabled = true;
-          badge.textContent = 'Sin stock';
-          badge.className = 'stock-badge sin-stock-badge';
-          badge.hidden = false;
-        } else if (qty <= LOW_STOCK_THRESHOLD) {
-          badge.textContent = `Últimas ${qty} unidades`;
-          badge.className = 'stock-badge low-stock-badge';
-          badge.hidden = false;
+          stockBadge.textContent = 'Sin stock';
+          stockBadge.className = 'stock-badge sin-stock-badge';
+          stockBadge.hidden = false;
+        } else if (qty < 3) {
+          // Menos de 3 unidades → alerta de stock bajo
+          stockBadge.textContent = qty === 1 ? 'Última unidad' : `Últimas ${qty} unidades`;
+          stockBadge.className = 'stock-badge low-stock-badge';
+          stockBadge.hidden = false;
+        }
+
+        // Badge NUEVO: automático si la fecha del sheet tiene < 30 días
+        if (esNuevo(fecha)) {
+          const itemName = card.querySelector('.item-name');
+          let nuevoBadge = itemName.querySelector('.nuevo-badge');
+          if (!nuevoBadge) {
+            nuevoBadge = document.createElement('span');
+            nuevoBadge.className = 'nuevo-badge';
+            nuevoBadge.textContent = 'NUEVO';
+            itemName.appendChild(nuevoBadge);
+          }
         }
       });
     }
