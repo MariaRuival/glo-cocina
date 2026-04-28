@@ -395,7 +395,7 @@
 
     // --- Stock logic ---
 
-    // CSV esperado: columnas key, stock, fecha (DD/MM/YYYY — opcional)
+    // CSV esperado: columnas key, stock, fecha (DD/MM/YYYY — opcional), precio (opcional)
     function parseCSV(text) {
       const lines = text.trim().split('\n');
       const result = {};
@@ -404,8 +404,9 @@
         const key = parts[0];
         if (!key) continue;
         result[key] = {
-          qty:   parseInt(parts[1], 10) || 0,
-          fecha: parts[2] || ''
+          qty:    parseInt(parts[1], 10) || 0,
+          fecha:  parts[2] || '',
+          precio: parseInt(parts[3], 10) || 0
         };
       }
       return result;
@@ -430,11 +431,20 @@
         const key = card.dataset.key;
         if (!(key in stockMap)) return;
 
-        const { qty, fecha } = stockMap[key];
+        const { qty, fecha, precio } = stockMap[key];
         const stockBadge = card.querySelector('.stock-badge');
         const plusBtn    = card.querySelector('.qty-btn.plus');
 
         card.dataset.stock = qty;
+
+        // Actualizar precio si viene del sheet
+        if (precio > 0) {
+          card.dataset.price = precio;
+          const priceEl = card.querySelector('.item-price');
+          const suffix = priceEl.querySelector('small'); // conservar ej: "/kg"
+          priceEl.childNodes.forEach(n => { if (n.nodeType === 3) n.remove(); });
+          priceEl.insertAdjacentText('afterbegin', formatPrice(precio) + (suffix ? ' ' : ''));
+        }
 
         if (qty === 0) {
           card.classList.add('sin-stock');
